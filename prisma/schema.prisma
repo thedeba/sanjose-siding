@@ -1,0 +1,185 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model User {
+  id          String    @id @default(cuid())
+  name        String
+  email       String    @unique
+  password    String
+  image       String?
+  role        Role      @relation(fields: [roleId], references: [id])
+  roleId      String
+  createdAt   DateTime  @default(now())
+  updatedAt   DateTime  @updatedAt
+  leads       Lead[]
+}
+
+model Role {
+  id          String       @id @default(cuid())
+  name        String       @unique
+  permissions Permission[] @relation("RolePermission")
+  users       User[]
+}
+
+model Permission {
+  id          String @id @default(cuid())
+  name        String @unique
+  description String?
+  roles       Role[] @relation("RolePermission")
+}
+
+model Service {
+  id               String   @id @default(cuid())
+  title            String
+  slug             String   @unique
+  icon             String
+  shortDescription String
+  fullContent      String
+  featuredImage    String
+  seoTitle         String
+  seoDescription   String
+  order            Int      @default(0)
+  published        Boolean  @default(true)
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+}
+
+model ServiceArea {
+  id            String   @id @default(cuid())
+  cityName      String
+  slug          String   @unique
+  heroTitle     String
+  content       String
+  seoTitle      String
+  seoDescription String
+  published     Boolean  @default(true)
+  createdAt     DateTime @default(now())
+  updatedAt     DateTime @updatedAt
+}
+
+model Blog {
+  id              String    @id @default(cuid())
+  title           String
+  slug            String    @unique
+  excerpt         String
+  content         String
+  featuredImage   String
+  metaTitle       String
+  metaDescription String
+  category        String
+  tags            String[]  @default([])
+  status          BlogStatus @default(DRAFT)
+  publishedAt     DateTime? 
+  createdAt       DateTime  @default(now())
+  updatedAt       DateTime  @updatedAt
+}
+
+model FAQ {
+  id        String   @id @default(cuid())
+  question  String
+  answer    String
+  category  String
+  sortOrder Int      @default(0)
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model Testimonial {
+  id           String   @id @default(cuid())
+  customerName String
+  city         String
+  review       String
+  rating       Int
+  image        String
+  createdAt    DateTime @default(now())
+  updatedAt    DateTime @updatedAt
+}
+
+model Gallery {
+  id          String   @id @default(cuid())
+  title       String
+  category    String
+  image       String
+  beforeAfter Boolean  @default(false)
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+}
+
+model Lead {
+  id         String    @id @default(cuid())
+  name       String
+  email      String
+  phone      String
+  address    String
+  service    String
+  message    String
+  status     LeadStatus @default(NEW)
+  source     String     @default("website")
+  user       User?      @relation(fields: [userId], references: [id])
+  userId     String?
+  createdAt  DateTime   @default(now())
+  updatedAt  DateTime   @updatedAt
+}
+
+model NavigationMenu {
+  id        String   @id @default(cuid())
+  title     String
+  url       String
+  position  Int      @default(0)
+  parentId  String?  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model SiteSetting {
+  id          String   @id @default(cuid())
+  companyName String
+  phone       String
+  email       String
+  address     String
+  logo        String
+  favicon     String
+  facebook    String?
+  instagram   String?
+  linkedin    String?
+  youtube     String?
+  updatedAt   DateTime @updatedAt
+}
+
+model Media {
+  id        String   @id @default(cuid())
+  publicId  String   @unique
+  url       String
+  folder    String
+  type      String
+  metadata  Json?
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+model HomepageSection {
+  id        String   @id @default(cuid())
+  key       String   @unique
+  value     Json
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+}
+
+enum BlogStatus {
+  DRAFT
+  PUBLISHED
+}
+
+enum LeadStatus {
+  NEW
+  CONTACTED
+  QUALIFIED
+  WON
+  LOST
+}

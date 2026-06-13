@@ -1,0 +1,37 @@
+import Link from "next/link";
+import { areaCards } from "@/lib/data";
+import { Card } from "../ui/card";
+import { MapPin } from "lucide-react";
+
+export function ServiceAreasSection() {
+  return (
+    <section className="bg-slate-950/95 px-6 py-20 text-white sm:px-8 lg:px-12">
+      <div className="mx-auto max-w-7xl">
+        <div className="mx-auto max-w-2xl text-center">
+          <p className="text-sm uppercase tracking-[0.32em] text-cyan-400">Service Areas</p>
+          <h2 className="mt-4 text-3xl font-semibold tracking-tight sm:text-4xl">Serving San Jose and every nearby neighborhood.</h2>
+          <p className="mt-4 text-sm leading-7 text-slate-300 sm:text-base">
+            Responsive local service across the South Bay with emergency siding support and same-week inspections.
+          </p>
+        </div>
+        <div className="mt-12 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+          {areaCards.map((area) => (
+            <Link key={area.slug} href={`/service-areas/${area.slug}`}>
+              <Card className="group cursor-pointer border-white/10 bg-slate-900/90 transition hover:-translate-y-1 hover:bg-slate-800/95">
+                <div className="flex items-center gap-4">
+                  <span className="inline-flex h-12 w-12 items-center justify-center rounded-3xl bg-cyan-500/10 text-cyan-300">
+                    <MapPin className="h-5 w-5" />
+                  </span>
+                  <div>
+                    <h3 className="text-xl font-semibold text-white">{area.city}</h3>
+                    <p className="mt-2 text-sm text-slate-400">Fast siding estimates and responsive project teams.</p>
+                  </div>
+                </div>
+              </Card>
+            </Link>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}

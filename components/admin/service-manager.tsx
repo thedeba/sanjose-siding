@@ -1,0 +1,265 @@
+"use client";
+
+import { useState } from "react";
+import { updateService } from "@/app/admin/actions";
+import { Button } from "../ui/button";
+import { Input } from "../ui/input";
+import { Label } from "../ui/label";
+import { Card } from "../ui/card";
+import { Textarea } from "../ui/textarea";
+import { Edit2, X, Check } from "lucide-react";
+
+type Service = {
+  id: string;
+  title: string;
+  slug: string;
+  shortDescription: string;
+  fullContent: string;
+  featuredImage: string;
+  seoTitle: string;
+  seoDescription: string;
+  order: number;
+  published: boolean;
+};
+
+type ServiceManagerProps = {
+  initialServices: Service[];
+};
+
+export function ServiceManager({ initialServices }: ServiceManagerProps) {
+  const [services, setServices] = useState<Service[]>(initialServices);
+  const [editingId, setEditingId] = useState<string | null>(null);
+
+  // Form States
+  const [title, setTitle] = useState("");
+  const [slug, setSlug] = useState("");
+  const [shortDescription, setShortDescription] = useState("");
+  const [fullContent, setFullContent] = useState("");
+  const [featuredImage, setFeaturedImage] = useState("");
+  const [seoTitle, setSeoTitle] = useState("");
+  const [seoDescription, setSeoDescription] = useState("");
+  const [order, setOrder] = useState(0);
+  const [published, setPublished] = useState(true);
+
+  const [loading, setLoading] = useState(false);
+  const [message, setMessage] = useState<{ text: string; success: boolean } | null>(null);
+
+  const handleOpenEdit = (service: Service) => {
+    setEditingId(service.id);
+    setTitle(service.title);
+    setSlug(service.slug);
+    setShortDescription(service.shortDescription);
+    setFullContent(service.fullContent);
+    setFeaturedImage(service.featuredImage);
+    setSeoTitle(service.seoTitle);
+    setSeoDescription(service.seoDescription);
+    setOrder(service.order);
+    setPublished(service.published);
+    setMessage(null);
+  };
+
+  const handleCancel = () => {
+    setEditingId(null);
+    setMessage(null);
+  };
+
+  const handleSave = async (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!editingId) return;
+    setLoading(true);
+    setMessage(null);
+
+    try {
+      const result = await updateService(editingId, {
+        title,
+        slug,
+        shortDescription,
+        fullContent,
+        featuredImage,
+        seoTitle,
+        seoDescription,
+        published,
+        order,
+      });
+
+      if (result.success) {
+        window.location.reload();
+      }
+    } catch (err: any) {
+      setMessage({ text: err.message || "An error occurred while saving.", success: false });
+      setLoading(false);
+    }
+  };
+
+  return (
+    <div className="space-y-6">
+      {/* Editor Panel */}
+      {editingId && (
+        <form onSubmit={handleSave} className="space-y-4 rounded-[2rem] border border-white/10 bg-slate-900/60 p-8 shadow-2xl backdrop-blur-xl">
+          <h2 className="text-xl font-semibold text-white">Edit Service</h2>
+          
+          <div className="grid gap-6 md:grid-cols-2">
+            <div className="space-y-2">
+              <Label htmlFor="title">Service Title</Label>
+              <Input 
+                id="title" 
+                value={title} 
+                onChange={(e) => setTitle(e.target.value)} 
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="slug">Slug (URL identifier)</Label>
+              <Input 
+                id="slug" 
+                value={slug} 
+                onChange={(e) => setSlug(e.target.value)} 
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="shortDescription">Short Description (for preview cards)</Label>
+              <Input 
+                id="shortDescription" 
+                value={shortDescription} 
+                onChange={(e) => setShortDescription(e.target.value)} 
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="fullContent">Full Page Content</Label>
+              <Textarea 
+                id="fullContent" 
+                value={fullContent} 
+                onChange={(e) => setFullContent(e.target.value)} 
+                required 
+                rows={5}
+                className="border-white/10 bg-slate-950/80 text-white min-h-[120px]"
+              />
+            </div>
+
+            <div className="space-y-2 md:col-span-2">
+              <Label htmlFor="featuredImage">Featured Image URL</Label>
+              <Input 
+                id="featuredImage" 
+                value={featuredImage} 
+                onChange={(e) => setFeaturedImage(e.target.value)} 
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="seoTitle">SEO Title</Label>
+              <Input 
+                id="seoTitle" 
+                value={seoTitle} 
+                onChange={(e) => setSeoTitle(e.target.value)} 
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="seoDescription">SEO Meta Description</Label>
+              <Input 
+                id="seoDescription" 
+                value={seoDescription} 
+                onChange={(e) => setSeoDescription(e.target.value)} 
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="order">Sort Order</Label>
+              <Input 
+                id="order" 
+                type="number"
+                value={order} 
+                onChange={(e) => setOrder(parseInt(e.target.value) || 0)} 
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="flex items-center gap-2 pt-8">
+              <input 
+                id="published" 
+                type="checkbox"
+                checked={published} 
+                onChange={(e) => setPublished(e.target.checked)}
+                className="h-4 w-4 rounded border-white/10 bg-slate-950 text-cyan-500 focus:ring-0 focus:ring-offset-0"
+              />
+              <Label htmlFor="published" className="cursor-pointer">Publish on website</Label>
+            </div>
+          </div>
+
+          {message && (
+            <div className="rounded-xl px-4 py-3 text-sm font-medium bg-rose-500/10 text-rose-400 border border-rose-500/20">
+              {message.text}
+            </div>
+          )}
+
+          <div className="flex justify-end gap-3 pt-4">
+            <Button 
+              type="button" 
+              onClick={handleCancel}
+              className="border border-white/10 bg-slate-950 hover:bg-slate-900 text-white rounded-xl"
+            >
+              <X className="h-4 w-4 mr-2" /> Cancel
+            </Button>
+            <Button 
+              type="submit" 
+              disabled={loading}
+              className="bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold rounded-xl"
+            >
+              <Check className="h-4 w-4 mr-2" /> {loading ? "Saving..." : "Save Service"}
+            </Button>
+          </div>
+        </form>
+      )}
+
+      {/* Services List */}
+      <div className="grid gap-4">
+        {services.map((service) => (
+          <Card key={service.id} className="border-white/10 bg-slate-900/60 p-6 hover:bg-slate-900/80 transition-all duration-300">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="space-y-1">
+                <div className="flex items-center gap-2">
+                  <h2 className="text-xl font-semibold text-white">{service.title}</h2>
+                  <span className="text-xs text-slate-400">({service.slug})</span>
+                </div>
+                <p className="text-sm text-slate-400">{service.shortDescription}</p>
+                <div className="flex gap-4 pt-1 text-xs text-slate-500">
+                  <span>Order: {service.order}</span>
+                  <span>•</span>
+                  <span>SEO Title: {service.seoTitle}</span>
+                </div>
+              </div>
+              <div className="flex items-center gap-3 self-end sm:self-center">
+                <span className={`rounded-full px-3 py-0.5 text-xs font-semibold tracking-wider uppercase ${
+                  service.published ? "bg-cyan-500/10 text-cyan-400" : "bg-white/5 text-slate-500"
+                }`}>
+                  {service.published ? "Published" : "Draft"}
+                </span>
+                <Button 
+                  onClick={() => handleOpenEdit(service)}
+                  className="!p-2.5 bg-white/5 hover:bg-white/15 border border-white/5 hover:border-white/10 text-white"
+                >
+                  <Edit2 className="h-4 w-4" />
+                </Button>
+              </div>
+            </div>
+          </Card>
+        ))}
+      </div>
+    </div>
+  );
+}

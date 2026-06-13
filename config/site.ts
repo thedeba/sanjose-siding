@@ -1,0 +1,47 @@
+export const siteConfig = {
+  name: "San Jose Siding Pros",
+  description: "Premium siding replacement, repair, and installation for homeowners across Silicon Valley.",
+  url: process.env.SITE_URL ?? "http://localhost:3000",
+  phone: "(408) 555-0199",
+  email: "info@sanjosesidingpros.com",
+  address: "1234 Alum Rock Ave, San Jose, CA 95116",
+  logo: "/logo.svg",
+  social: {
+    facebook: "https://facebook.com/sanjosesidingpros",
+    instagram: "https://instagram.com/sanjosesidingpros",
+    linkedin: "https://linkedin.com/company/sanjose-siding-pros",
+  },
+  nav: [
+    { title: "Home", href: "/" },
+    { title: "About", href: "/about" },
+    {
+      title: "Services",
+      href: "/services",
+      children: [
+        { title: "Vinyl Siding", href: "/services/vinyl-siding" },
+        { title: "Fiber Cement", href: "/services/fiber-cement-siding" },
+        { title: "Wood Siding", href: "/services/wood-siding" },
+        { title: "Siding Repair", href: "/services/siding-repair" },
+        { title: "Replacement", href: "/services/siding-replacement" },
+        { title: "Emergency", href: "/services/emergency-siding" },
+      ],
+    },
+    {
+      title: "Service Areas",
+      href: "/service-areas",
+      children: [
+        { title: "San Jose", href: "/service-areas/san-jose" },
+        { title: "Santa Clara", href: "/service-areas/santa-clara" },
+        { title: "Sunnyvale", href: "/service-areas/sunnyvale" },
+        { title: "Cupertino", href: "/service-areas/cupertino" },
+        { title: "Milpitas", href: "/service-areas/milpitas" },
+        { title: "Campbell", href: "/service-areas/campbell" },
+        { title: "Mountain View", href: "/service-areas/mountain-view" },
+      ],
+    },
+    { title: "Gallery", href: "/gallery" },
+    { title: "Blog", href: "/blog" },
+    { title: "FAQ", href: "/faq" },
+    { title: "Contact", href: "/contact" },
+  ],
+};
