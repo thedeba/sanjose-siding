@@ -10,10 +10,10 @@ export const AccordionItem = AccordionPrimitive.Item;
 
 export function AccordionTrigger({ className, children, ...props }: React.HTMLAttributes<HTMLButtonElement>) {
   return (
-    <AccordionPrimitive.Header className="border-b border-slate-200/70">
+    <AccordionPrimitive.Header className="border-b border-white/10">
       <AccordionPrimitive.Trigger
         className={clsx(
-          "flex w-full items-center justify-between py-5 text-left text-base font-semibold text-slate-950 transition hover:text-slate-900",
+          "flex w-full items-center justify-between py-5 text-left text-base font-semibold text-white transition hover:text-cyan-400",
           className
         )}
         {...props}
@@ -26,7 +26,7 @@ export function AccordionTrigger({ className, children, ...props }: React.HTMLAt
 
 export function AccordionContent({ className, children, ...props }: React.HTMLAttributes<HTMLDivElement>) {
   return (
-    <AccordionPrimitive.Content className={clsx("overflow-hidden text-sm leading-7 text-slate-600", className)} {...props}>
+    <AccordionPrimitive.Content className={clsx("overflow-hidden text-sm leading-7 text-slate-300", className)} {...props}>
       <div className="pb-5 pt-2">{children}</div>
     </AccordionPrimitive.Content>
   );

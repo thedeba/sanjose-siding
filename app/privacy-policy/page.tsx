@@ -9,15 +9,15 @@ export default function PrivacyPolicyPage() {
         <div className="space-y-6 text-slate-300">
           <div>
             <h2 className="text-xl font-semibold text-white">Information Collection</h2>
-            <p className="mt-3 leading-7">We collect contact details and project information submitted through our estimate request form to respond effectively and schedule consultations.</p>
+            <p className="mt-3 leading-7">We do not provide contact or quote submission forms. We process your phone number and details provided directly when you contact us via our phone line to connect you with siding services and schedule consultations.</p>
           </div>
           <div>
             <h2 className="text-xl font-semibold text-white">Use of Information</h2>
-            <p className="mt-3 leading-7">Information is used to manage leads, communicate appointment details, and improve our service offering in San Jose.</p>
+            <p className="mt-3 leading-7">Information is used to connect you with local siding service professionals, manage phone inquiries, and improve service delivery in the San Jose area.</p>
           </div>
           <div>
             <h2 className="text-xl font-semibold text-white">Data Retention</h2>
-            <p className="mt-3 leading-7">Leads are retained until follow-up is complete and to maintain a record for customer support and service history.</p>
+            <p className="mt-3 leading-7">Phone call logs and service inquiry details are retained to ensure customer support continuity and service history verification.</p>
           </div>
         </div>
       </div>

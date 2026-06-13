@@ -38,12 +38,6 @@ export const processSteps = [
 
 export const areaCards = [
   { city: "San Jose", slug: "san-jose" },
-  { city: "Santa Clara", slug: "santa-clara" },
-  { city: "Sunnyvale", slug: "sunnyvale" },
-  { city: "Cupertino", slug: "cupertino" },
-  { city: "Milpitas", slug: "milpitas" },
-  { city: "Campbell", slug: "campbell" },
-  { city: "Mountain View", slug: "mountain-view" },
 ];
 
 export const testimonialsData = [
@@ -55,13 +49,13 @@ export const testimonialsData = [
   },
   {
     name: "Jordan K.",
-    city: "Cupertino",
+    city: "San Jose",
     review: "The team finished ahead of schedule and the house looks brand new.",
     rating: 5,
   },
   {
     name: "Priya S.",
-    city: "Sunnyvale",
+    city: "San Jose",
     review: "Responsive, detail-oriented, and the quality is outstanding.",
     rating: 5,
   },

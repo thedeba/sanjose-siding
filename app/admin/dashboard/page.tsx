@@ -90,14 +90,50 @@ export default async function DashboardPage() {
     testimonials: testimonialCount,
   };
 
-  const chartData = [
-    { month: "Jan", leads: 18 },
-    { month: "Feb", leads: 24 },
-    { month: "Mar", leads: 34 },
-    { month: "Apr", leads: 29 },
-    { month: "May", leads: 38 },
-    { month: "Jun", leads: 42 },
-  ];
+  const chartData: Array<{ month: string; leads: number }> = [];
+  const monthNames = ["Jan", "Feb", "Mar", "Apr", "May", "Jun", "Jul", "Aug", "Sep", "Oct", "Nov", "Dec"];
+  const currentYear = new Date().getFullYear();
+
+  for (let i = 5; i >= 0; i--) {
+    const d = new Date();
+    d.setDate(1);
+    d.setMonth(d.getMonth() - i);
+    const monthName = monthNames[d.getMonth()];
+    const year = d.getFullYear();
+    const label = year !== currentYear ? `${monthName} '${String(year).slice(-2)}` : monthName;
+    chartData.push({
+      month: label,
+      leads: 0,
+    });
+  }
+
+  // Set the date to 1st of the starting month to ensure we capture the whole starting month
+  const sixMonthsAgo = new Date();
+  sixMonthsAgo.setDate(1);
+  sixMonthsAgo.setMonth(sixMonthsAgo.getMonth() - 5);
+  sixMonthsAgo.setHours(0, 0, 0, 0);
+
+  const leads = await prisma.lead.findMany({
+    where: {
+      createdAt: {
+        gte: sixMonthsAgo,
+      },
+    },
+    select: {
+      createdAt: true,
+    },
+  });
+
+  leads.forEach((lead) => {
+    const date = new Date(lead.createdAt);
+    const monthName = monthNames[date.getMonth()];
+    const year = date.getFullYear();
+    const label = year !== currentYear ? `${monthName} '${String(year).slice(-2)}` : monthName;
+    const bin = chartData.find((b) => b.month === label);
+    if (bin) {
+      bin.leads += 1;
+    }
+  });
 
   return (
     <div className="grid gap-6">

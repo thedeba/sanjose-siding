@@ -2,6 +2,7 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { prisma } from "../../../lib/prisma";
 import { buildMetadata } from "../../../lib/seo";
+import { siteConfig } from "../../../config/site";
 
 export async function generateStaticParams() {
   const areas = (await prisma.serviceArea.findMany({ where: { published: true }, select: { slug: true } })) as Array<{ slug: string }>;
@@ -44,6 +45,11 @@ export default async function ServiceAreaPage({ params }: { params: Promise<{ sl
               <li>• Fire-safe material options</li>
               <li>• Neighborhood-friendly project management</li>
             </ul>
+            <div className="pt-6 border-t border-white/5">
+              <a href={`tel:${siteConfig.phone}`} className="inline-flex w-full items-center justify-center gap-2 rounded-full bg-cyan-500 py-3 text-sm font-bold text-slate-950 hover:bg-cyan-600 transition duration-300">
+                Call {siteConfig.phone} Now
+              </a>
+            </div>
           </div>
         </div>
       </div>

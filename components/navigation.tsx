@@ -20,12 +20,14 @@ export function Navigation() {
                 {item.title}
               </Link>
               {item.children ? (
-                <div className="pointer-events-none absolute left-0 top-full mt-3 hidden w-52 flex-col rounded-3xl border border-white/10 bg-slate-950/95 p-4 opacity-0 shadow-2xl shadow-slate-950/20 transition duration-200 group-hover:pointer-events-auto group-hover:block group-hover:opacity-100">
-                  {item.children.map((sub) => (
-                    <Link key={sub.title} href={sub.href} className="rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-slate-900/80 hover:text-white">
-                      {sub.title}
-                    </Link>
-                  ))}
+                <div className="pointer-events-none absolute left-0 top-full w-52 pt-3 opacity-0 invisible group-hover:pointer-events-auto group-hover:opacity-100 group-hover:visible transition-all duration-200">
+                  <div className="flex flex-col rounded-3xl border border-white/10 bg-slate-950/95 p-4 shadow-2xl shadow-slate-950/20">
+                    {item.children.map((sub) => (
+                      <Link key={sub.title} href={sub.href} className="rounded-2xl px-3 py-2 text-sm text-slate-200 transition hover:bg-slate-900/80 hover:text-white">
+                        {sub.title}
+                      </Link>
+                    ))}
+                  </div>
                 </div>
               ) : null}
             </div>
@@ -33,12 +35,9 @@ export function Navigation() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Link href={`tel:${siteConfig.phone}`} className="inline-flex items-center gap-2 rounded-full bg-white/95 px-4 py-2 text-slate-950 shadow-sm transition hover:bg-white">
-            <Phone className="h-4 w-4" />
-            {siteConfig.phone}
-          </Link>
-          <Link href="/contact" className="inline-flex items-center justify-center rounded-full border border-slate-200/30 bg-white/95 px-5 py-2 text-sm font-semibold text-slate-950 transition hover:bg-white">
-            Book Estimate
+          <Link href={`tel:${siteConfig.phone}`} className="inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-bold text-slate-950 shadow-sm transition hover:bg-white">
+            <Phone className="h-4 w-4 text-cyan-600 animate-pulse" />
+            Call Now: {siteConfig.phone}
           </Link>
         </div>
 

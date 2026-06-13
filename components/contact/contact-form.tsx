@@ -1,90 +1,53 @@
 "use client";
 
-import { useState } from "react";
-import { useForm } from "react-hook-form";
-import { zodResolver } from "@hookform/resolvers/zod";
-import { leadSchema } from "@/lib/validators";
-import { Button } from "../ui/button";
-import { Input } from "../ui/input";
-import { Label } from "../ui/label";
-import { Textarea } from "../ui/textarea";
-
-type LeadFormValues = {
-  name: string;
-  email: string;
-  phone: string;
-  address: string;
-  service: string;
-  message: string;
-};
+import { Phone, CheckCircle, Shield, Award } from "lucide-react";
+import { siteConfig } from "@/config/site";
 
 export function ContactForm() {
-  const [success, setSuccess] = useState(false);
-  const [error, setError] = useState<string | null>(null);
-  const {
-    register,
-    handleSubmit,
-    reset,
-    formState: { errors, isSubmitting },
-  } = useForm<LeadFormValues>({ resolver: zodResolver(leadSchema) });
-
-  const onSubmit = async (data: LeadFormValues) => {
-    setError(null);
-    const response = await fetch("/api/lead", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify(data),
-    });
-
-    if (response.ok) {
-      setSuccess(true);
-      reset();
-      return;
-    }
-
-    const payload = await response.json();
-    setError(payload?.error?.message || "Submission failed. Please try again.");
-  };
-
   return (
-    <form onSubmit={handleSubmit(onSubmit)} className="grid gap-6 rounded-[2rem] border border-white/10 bg-slate-950/95 p-8 shadow-2xl shadow-slate-950/30">
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <Label htmlFor="name">Full Name</Label>
-          <Input id="name" placeholder="Jane Doe" {...register("name")} />
-          {errors.name ? <p className="mt-2 text-xs text-rose-400">{errors.name.message}</p> : null}
-        </div>
-        <div>
-          <Label htmlFor="email">Email</Label>
-          <Input id="email" type="email" placeholder="jane@example.com" {...register("email")} />
-          {errors.email ? <p className="mt-2 text-xs text-rose-400">{errors.email.message}</p> : null}
+    <div className="flex flex-col justify-between rounded-[2rem] border border-white/10 bg-slate-950/95 p-8 shadow-2xl shadow-slate-950/30">
+      <div className="space-y-6">
+        <h2 className="text-2xl font-semibold text-white">Call to Get Your Free Siding Estimate</h2>
+        <p className="text-sm leading-7 text-slate-300">
+          We do not require you to fill out long, tedious forms. Speak directly with a local San Jose siding expert today. Get your estimate, ask questions, or schedule an inspection instantly.
+        </p>
+
+        <div className="space-y-4 pt-4">
+          <div className="flex items-start gap-3">
+            <CheckCircle className="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-semibold text-white">Instant Consultation</p>
+              <p className="text-xs text-slate-400">No waiting for email replies. Talk to a real person immediately.</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <Shield className="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-semibold text-white">Transparent & Direct Pricing</p>
+              <p className="text-xs text-slate-400">Get local rates for vinyl, fiber cement, and wood siding options.</p>
+            </div>
+          </div>
+
+          <div className="flex items-start gap-3">
+            <Award className="h-5 w-5 text-cyan-400 mt-0.5 flex-shrink-0" />
+            <div>
+              <p className="text-sm font-semibold text-white">Same-Week Inspections</p>
+              <p className="text-xs text-slate-400">Secure your appointment slot over the phone in under 2 minutes.</p>
+            </div>
+          </div>
         </div>
       </div>
-      <div className="grid gap-4 sm:grid-cols-2">
-        <div>
-          <Label htmlFor="phone">Phone</Label>
-          <Input id="phone" type="tel" placeholder="(408) 555-0123" {...register("phone")} />
-          {errors.phone ? <p className="mt-2 text-xs text-rose-400">{errors.phone.message}</p> : null}
-        </div>
-        <div>
-          <Label htmlFor="address">Address</Label>
-          <Input id="address" placeholder="San Jose, CA" {...register("address")} />
-          {errors.address ? <p className="mt-2 text-xs text-rose-400">{errors.address.message}</p> : null}
-        </div>
+
+      <div className="pt-8 mt-6 border-t border-white/5 text-center">
+        <p className="text-xs text-slate-400 uppercase tracking-widest mb-3">Direct Dispatch Line</p>
+        <a 
+          href={`tel:${siteConfig.phone}`} 
+          className="inline-flex w-full items-center justify-center gap-3 rounded-full bg-cyan-500 hover:bg-cyan-600 px-6 py-4 text-base font-bold text-slate-950 shadow-lg shadow-cyan-500/20 transition duration-300"
+        >
+          <Phone className="h-5 w-5 animate-pulse" /> Call Now: {siteConfig.phone}
+        </a>
       </div>
-      <div>
-        <Label htmlFor="service">Service</Label>
-        <Input id="service" placeholder="Vinyl siding replacement" {...register("service")} />
-        {errors.service ? <p className="mt-2 text-xs text-rose-400">{errors.service.message}</p> : null}
-      </div>
-      <div>
-        <Label htmlFor="message">Project details</Label>
-        <Textarea id="message" placeholder="Tell us about your siding needs." {...register("message")} />
-        {errors.message ? <p className="mt-2 text-xs text-rose-400">{errors.message.message}</p> : null}
-      </div>
-      {error ? <p className="text-sm text-rose-400">{error}</p> : null}
-      {success ? <p className="text-sm text-emerald-400">Thanks! Your request was submitted successfully.</p> : null}
-      <Button type="submit" disabled={isSubmitting}>{isSubmitting ? "Sending…" : "Submit Request"}</Button>
-    </form>
+    </div>
   );
 }

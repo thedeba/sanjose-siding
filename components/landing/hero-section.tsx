@@ -21,8 +21,8 @@ export function HeroSection() {
             </p>
           </div>
           <div className="flex flex-col gap-4 sm:flex-row sm:items-center">
-            <Link href="/contact">
-              <Button className="w-full sm:w-auto">Get a Free Quote</Button>
+            <Link href="tel:(408)555-0199">
+              <Button className="w-full sm:w-auto">Call: (408) 555-0199</Button>
             </Link>
             <Link href="/services">
               <Button variant="secondary" className="w-full sm:w-auto">

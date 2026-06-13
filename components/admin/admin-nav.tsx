@@ -14,8 +14,10 @@ import {
   HelpCircle, 
   MessageSquare, 
   Settings, 
-  Search 
+  Search,
+  LogOut
 } from "lucide-react";
+import { signOut } from "next-auth/react";
 
 const navItems = [
   { label: "Dashboard", href: "/admin/dashboard", icon: LayoutDashboard },
@@ -61,6 +63,13 @@ export function AdminNav() {
               </Link>
             );
           })}
+          <button
+            onClick={() => signOut({ callbackUrl: "/admin/login" })}
+            className="flex items-center gap-3 rounded-2xl px-4 py-3 text-sm font-medium transition-all duration-300 whitespace-nowrap lg:whitespace-normal cursor-pointer text-red-400 hover:bg-red-500/10 hover:text-red-300"
+          >
+            <LogOut className="h-5 w-5" />
+            <span>Logout</span>
+          </button>
         </div>
       </div>
     </aside>

@@ -123,14 +123,10 @@ async function main() {
     )
   );
 
+  await prisma.serviceArea.deleteMany();
+
   const areas = [
     { cityName: "San Jose", slug: "san-jose", heroTitle: "San Jose siding solutions with local craftsmanship.", content: "Your neighborhood siding experts, offering fast inspections and premium installation.", seoTitle: "San Jose Siding Contractor", seoDescription: "Top-rated siding contractor in San Jose offering repairs, replacements, and premium siding systems." },
-    { cityName: "Santa Clara", slug: "santa-clara", heroTitle: "Trusted siding work across Santa Clara.", content: "From historic homes to new construction, we provide siding tailored to the South Bay climate.", seoTitle: "Santa Clara Siding Services", seoDescription: "Superior siding installation and repair services in Santa Clara." },
-    { cityName: "Sunnyvale", slug: "sunnyvale", heroTitle: "Sunnyvale siding experts ready to protect your home.", content: "Local siding professionals with fast response and high-quality exterior finishes.", seoTitle: "Sunnyvale Siding Contractor", seoDescription: "Professional siding services for homeowners in Sunnyvale." },
-    { cityName: "Cupertino", slug: "cupertino", heroTitle: "Cupertino siding upgrades for modern homes.", content: "Precision siding installation and repair for Cupertino residences.", seoTitle: "Cupertino Siding Experts", seoDescription: "The highest level of siding service and support in Cupertino." },
-    { cityName: "Milpitas", slug: "milpitas", heroTitle: "Milpitas siding service with local support.", content: "Streamlined siding projects for modern Bay Area homes in Milpitas.", seoTitle: "Milpitas Siding Contractor", seoDescription: "Quality siding installations and repair in Milpitas." },
-    { cityName: "Campbell", slug: "campbell", heroTitle: "Campbell siding solutions for every budget.", content: "Durable siding systems installed by licensed Campbell contractors.", seoTitle: "Campbell Siding Services", seoDescription: "Trusted Campbell siding service for homeowners and landlords." },
-    { cityName: "Mountain View", slug: "mountain-view", heroTitle: "Mountain View's choice for siding performance.", content: "High-end siding work delivering superior life-cycle value.", seoTitle: "Mountain View Siding Company", seoDescription: "Expert siding repair and replacement for Mountain View homes." },
   ];
 
   await Promise.all(
@@ -231,10 +227,12 @@ async function main() {
     })
   );
 
+  await prisma.testimonial.deleteMany();
+
   const testimonials = [
     { customerName: "Maria R.", city: "San Jose", review: "Excellent siding service from start to finish. The team was professional and delivered on time.", rating: 5, image: "https://res.cloudinary.com/demo/image/upload/v1/testimonial-1.jpg" },
-    { customerName: "Jordan K.", city: "Cupertino", review: "Our home looks brand-new after the vinyl siding installation. Highly recommended.", rating: 5, image: "https://res.cloudinary.com/demo/image/upload/v1/testimonial-2.jpg" },
-    { customerName: "Priya S.", city: "Sunnyvale", review: "The crew was responsive and respectful. Great quality and beautiful results.", rating: 5, image: "https://res.cloudinary.com/demo/image/upload/v1/testimonial-3.jpg" },
+    { customerName: "Jordan K.", city: "San Jose", review: "Our home looks brand-new after the vinyl siding installation. Highly recommended.", rating: 5, image: "https://res.cloudinary.com/demo/image/upload/v1/testimonial-2.jpg" },
+    { customerName: "Priya S.", city: "San Jose", review: "The crew was responsive and respectful. Great quality and beautiful results.", rating: 5, image: "https://res.cloudinary.com/demo/image/upload/v1/testimonial-3.jpg" },
   ];
 
   await Promise.all(
