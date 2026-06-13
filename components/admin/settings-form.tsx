@@ -45,8 +45,8 @@ export function SettingsForm({ initialData }: SettingsFormProps) {
       } else {
         setMessage({ text: "Failed to save settings.", success: false });
       }
-    } catch (err: any) {
-      setMessage({ text: err.message || "An unexpected error occurred.", success: false });
+    } catch (err) {
+      setMessage({ text: err instanceof Error ? err.message : "An unexpected error occurred.", success: false });
     } finally {
       setLoading(false);
     }

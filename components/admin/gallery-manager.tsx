@@ -80,8 +80,8 @@ export function GalleryManager({ initialPhotos }: GalleryManagerProps) {
           window.location.reload();
         }
       }
-    } catch (err: any) {
-      setMessage({ text: err.message || "An error occurred while saving.", success: false });
+    } catch (err) {
+      setMessage({ text: err instanceof Error ? err.message : "An error occurred while saving.", success: false });
       setLoading(false);
     }
   };
@@ -95,8 +95,8 @@ export function GalleryManager({ initialPhotos }: GalleryManagerProps) {
       if (result.success) {
         setPhotos(photos.filter((photo) => photo.id !== id));
       }
-    } catch (err: any) {
-      alert(err.message || "Failed to delete gallery item.");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete gallery item.");
     } finally {
       setLoading(false);
     }

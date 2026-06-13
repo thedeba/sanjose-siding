@@ -27,7 +27,7 @@ type ServiceManagerProps = {
 };
 
 export function ServiceManager({ initialServices }: ServiceManagerProps) {
-  const [services, setServices] = useState<Service[]>(initialServices);
+  const services = initialServices;
   const [editingId, setEditingId] = useState<string | null>(null);
 
   // Form States
@@ -85,8 +85,8 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
       if (result.success) {
         window.location.reload();
       }
-    } catch (err: any) {
-      setMessage({ text: err.message || "An error occurred while saving.", success: false });
+    } catch (err) {
+      setMessage({ text: err instanceof Error ? err.message : "An error occurred while saving.", success: false });
       setLoading(false);
     }
   };

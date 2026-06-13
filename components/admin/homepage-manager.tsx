@@ -5,13 +5,14 @@ import { updateHomepageSection } from "@/app/admin/actions";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
-import { Card } from "../ui/card";
-import { Plus, Trash2, Check, HelpCircle } from "lucide-react";
+import { Plus, Trash2, Check } from "lucide-react";
+
+import type { Prisma } from "@prisma/client";
 
 type HomepageSection = {
   id: string;
   key: string;
-  value: any;
+  value: Prisma.JsonValue;
 };
 
 type HomepageManagerProps = {
@@ -23,12 +24,15 @@ export function HomepageManager({ initialSections }: HomepageManagerProps) {
   const heroSection = initialSections.find((s) => s.key === "hero");
   const whyChooseSection = initialSections.find((s) => s.key === "whyChoose");
 
+  const heroValue = heroSection?.value as { headline?: string; subheadline?: string } | null;
+  const whyChooseValue = whyChooseSection?.value as { bullets?: string[] } | null;
+
   // Hero form states
-  const [heroHeadline, setHeroHeadline] = useState(heroSection?.value?.headline || "");
-  const [heroSubheadline, setHeroSubheadline] = useState(heroSection?.value?.subheadline || "");
+  const [heroHeadline, setHeroHeadline] = useState(heroValue?.headline || "");
+  const [heroSubheadline, setHeroSubheadline] = useState(heroValue?.subheadline || "");
 
   // Why Choose form states
-  const [bullets, setBullets] = useState<string[]>(whyChooseSection?.value?.bullets || []);
+  const [bullets, setBullets] = useState<string[]>(whyChooseValue?.bullets || []);
 
   const [loadingHero, setLoadingHero] = useState(false);
   const [loadingWhy, setLoadingWhy] = useState(false);
@@ -50,8 +54,8 @@ export function HomepageManager({ initialSections }: HomepageManagerProps) {
       if (result.success) {
         setMessageHero({ text: "Hero section updated successfully!", success: true });
       }
-    } catch (err: any) {
-      setMessageHero({ text: err.message || "Failed to update hero section.", success: false });
+    } catch (err) {
+      setMessageHero({ text: err instanceof Error ? err.message : "Failed to update hero section.", success: false });
     } finally {
       setLoadingHero(false);
     }
@@ -71,8 +75,8 @@ export function HomepageManager({ initialSections }: HomepageManagerProps) {
       if (result.success) {
         setMessageWhy({ text: "Why Choose section updated successfully!", success: true });
       }
-    } catch (err: any) {
-      setMessageWhy({ text: err.message || "Failed to update Why Choose section.", success: false });
+    } catch (err) {
+      setMessageWhy({ text: err instanceof Error ? err.message : "Failed to update Why Choose section.", success: false });
     } finally {
       setLoadingWhy(false);
     }

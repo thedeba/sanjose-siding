@@ -106,8 +106,8 @@ export function BlogManager({ initialBlogs }: BlogManagerProps) {
           window.location.reload();
         }
       }
-    } catch (err: any) {
-      setMessage({ text: err.message || "An error occurred while saving.", success: false });
+    } catch (err) {
+      setMessage({ text: err instanceof Error ? err.message : "An error occurred while saving.", success: false });
       setLoading(false);
     }
   };
@@ -121,8 +121,8 @@ export function BlogManager({ initialBlogs }: BlogManagerProps) {
       if (result.success) {
         setBlogs(blogs.filter((blog) => blog.id !== id));
       }
-    } catch (err: any) {
-      alert(err.message || "Failed to delete blog post.");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete blog post.");
     } finally {
       setLoading(false);
     }
@@ -227,7 +227,7 @@ export function BlogManager({ initialBlogs }: BlogManagerProps) {
               <select
                 id="status"
                 value={status}
-                onChange={(e) => setStatus(e.target.value as any)}
+                onChange={(e) => setStatus(e.target.value as "DRAFT" | "PUBLISHED")}
                 className="w-full rounded-2xl border border-white/10 bg-slate-950/80 px-4 py-3 text-sm text-white focus:outline-none focus:border-cyan-500"
               >
                 <option value="DRAFT">Draft</option>

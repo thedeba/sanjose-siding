@@ -1,7 +1,6 @@
 import Link from "next/link";
-import { ChevronDown, Phone, Menu } from "lucide-react";
+import { Phone, Menu } from "lucide-react";
 import { siteConfig } from "../config/site";
-import { Button } from "./ui/button";
 
 export function Navigation() {
   return (

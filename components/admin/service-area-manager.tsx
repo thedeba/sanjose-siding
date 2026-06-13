@@ -96,8 +96,8 @@ export function ServiceAreaManager({ initialAreas }: ServiceAreaManagerProps) {
           window.location.reload();
         }
       }
-    } catch (err: any) {
-      setMessage({ text: err.message || "An error occurred while saving.", success: false });
+    } catch (err) {
+      setMessage({ text: err instanceof Error ? err.message : "An error occurred while saving.", success: false });
       setLoading(false);
     }
   };
@@ -111,8 +111,8 @@ export function ServiceAreaManager({ initialAreas }: ServiceAreaManagerProps) {
       if (result.success) {
         setAreas(areas.filter((area) => area.id !== id));
       }
-    } catch (err: any) {
-      alert(err.message || "Failed to delete service area.");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete service area.");
     } finally {
       setLoading(false);
     }

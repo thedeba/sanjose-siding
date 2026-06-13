@@ -1,5 +1,4 @@
 import { type Metadata } from "next";
-import { siteConfig } from "../config/site";
 
 export const heroData = {
   title: "San Jose Siding Experts Ready to Protect Your Home",

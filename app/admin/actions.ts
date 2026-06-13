@@ -3,6 +3,7 @@
 import { revalidatePath } from "next/cache";
 import { prisma } from "../../lib/prisma";
 import { getCurrentUser } from "../../lib/auth";
+import { Prisma } from "@prisma/client";
 
 // Helper to check authentication
 async function requireAuth() {
@@ -310,7 +311,7 @@ export async function deleteGallery(id: string) {
 }
 
 // 7. Homepage Section Actions
-export async function updateHomepageSection(id: string, value: any) {
+export async function updateHomepageSection(id: string, value: Prisma.InputJsonValue) {
   await requireAuth();
 
   await prisma.homepageSection.update({

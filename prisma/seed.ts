@@ -4,7 +4,7 @@ import { hash } from "bcryptjs";
 const prisma = new PrismaClient();
 
 async function main() {
-  const [superAdminRole, adminRole, editorRole, supportRole] = await Promise.all([
+  const [superAdminRole] = await Promise.all([
     prisma.role.upsert({ where: { name: "Super Admin" }, update: {}, create: { name: "Super Admin" } }),
     prisma.role.upsert({ where: { name: "Admin" }, update: {}, create: { name: "Admin" } }),
     prisma.role.upsert({ where: { name: "Editor" }, update: {}, create: { name: "Editor" } }),

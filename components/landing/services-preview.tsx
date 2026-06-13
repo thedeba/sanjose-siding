@@ -1,15 +1,8 @@
 import Link from "next/link";
-import { ArrowRight, Layers, TreeDeciduous, Wrench } from "lucide-react";
+import { Layers, TreeDeciduous, Wrench } from "lucide-react";
 import { servicesData } from "@/lib/data";
 import { Card } from "../ui/card";
 import { Button } from "../ui/button";
-
-const icons: Record<string, string> = {
-  "Vinyl Siding": "Layers",
-  "Fiber Cement Siding": "Layers",
-  "Wood Siding": "TreeDeciduous",
-  "Siding Repair": "Wrench",
-};
 
 export function ServicesPreview() {
   return (

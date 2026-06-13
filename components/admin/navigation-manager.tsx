@@ -77,8 +77,8 @@ export function NavigationManager({ initialItems }: NavigationManagerProps) {
           window.location.reload();
         }
       }
-    } catch (err: any) {
-      setMessage({ text: err.message || "An error occurred while saving.", success: false });
+    } catch (err) {
+      setMessage({ text: err instanceof Error ? err.message : "An error occurred while saving.", success: false });
       setLoading(false);
     }
   };
@@ -92,8 +92,8 @@ export function NavigationManager({ initialItems }: NavigationManagerProps) {
       if (result.success) {
         setItems(items.filter((item) => item.id !== id));
       }
-    } catch (err: any) {
-      alert(err.message || "Failed to delete navigation item.");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete navigation item.");
     } finally {
       setLoading(false);
     }

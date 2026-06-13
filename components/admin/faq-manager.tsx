@@ -77,8 +77,8 @@ export function FAQManager({ initialFAQs }: FAQManagerProps) {
           window.location.reload();
         }
       }
-    } catch (err: any) {
-      setMessage({ text: err.message || "An error occurred while saving.", success: false });
+    } catch (err) {
+      setMessage({ text: err instanceof Error ? err.message : "An error occurred while saving.", success: false });
       setLoading(false);
     }
   };
@@ -92,8 +92,8 @@ export function FAQManager({ initialFAQs }: FAQManagerProps) {
       if (result.success) {
         setFaqs(faqs.filter(faq => faq.id !== id));
       }
-    } catch (err: any) {
-      alert(err.message || "Failed to delete FAQ.");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete FAQ.");
     } finally {
       setLoading(false);
     }

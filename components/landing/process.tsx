@@ -1,6 +1,6 @@
 import { processSteps } from "@/lib/data";
 import { Card } from "../ui/card";
-import { ArrowRight, Palette, Search, ShieldCheck, Sparkles } from "lucide-react";
+import { Palette, Search, ShieldCheck, Sparkles } from "lucide-react";
 
 const icons: Record<string, React.ComponentType<{ className?: string }>> = {
   Search,

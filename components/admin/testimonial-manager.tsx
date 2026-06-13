@@ -78,8 +78,8 @@ export function TestimonialManager({ initialTestimonials }: TestimonialManagerPr
           window.location.reload();
         }
       }
-    } catch (err: any) {
-      setMessage({ text: err.message || "An error occurred while saving.", success: false });
+    } catch (err) {
+      setMessage({ text: err instanceof Error ? err.message : "An error occurred while saving.", success: false });
       setLoading(false);
     }
   };
@@ -93,8 +93,8 @@ export function TestimonialManager({ initialTestimonials }: TestimonialManagerPr
       if (result.success) {
         setTestimonials(testimonials.filter((t) => t.id !== id));
       }
-    } catch (err: any) {
-      alert(err.message || "Failed to delete testimonial.");
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete testimonial.");
     } finally {
       setLoading(false);
     }
@@ -221,6 +221,7 @@ export function TestimonialManager({ initialTestimonials }: TestimonialManagerPr
               <div className="space-y-3 max-w-4xl">
                 <div className="flex items-center gap-3">
                   {t.image && (
+                    // eslint-disable-next-line @next/next/no-img-element
                     <img 
                       src={t.image} 
                       alt={t.customerName} 
