@@ -1,16 +1,36 @@
 import Link from "next/link";
 import { siteConfig } from "../config/site";
 import { Badge } from "./ui/badge";
+import { prisma } from "../lib/prisma";
 
-export function Footer() {
+export async function Footer() {
+  const settings = await prisma.siteSetting.findUnique({
+    where: { id: "site-settings" },
+  });
+
+  const companyName = settings?.companyName || siteConfig.name;
+  const address = settings?.address || siteConfig.address;
+  const email = settings?.email || siteConfig.email;
+  const phone = settings?.phone || siteConfig.phone;
+  const logo = settings?.logo;
+
   return (
     <footer className="border-t border-slate-200/10 bg-slate-950/95 text-slate-300">
       <div className="mx-auto flex max-w-7xl flex-col gap-10 px-6 py-16 sm:px-8 lg:flex-row lg:items-start lg:justify-between">
         <div className="max-w-xl space-y-4">
           <div className="flex items-center gap-3">
-            <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500 text-white">SJ</div>
+            {logo ? (
+              // eslint-disable-next-line @next/next/no-img-element
+              <img 
+                src={logo} 
+                alt={companyName} 
+                className="h-12 w-auto max-w-[150px] object-contain rounded-lg"
+              />
+            ) : (
+              <div className="flex h-12 w-12 items-center justify-center rounded-2xl bg-cyan-500 text-white font-bold">SJ</div>
+            )}
             <div>
-              <p className="font-semibold text-white">{siteConfig.name}</p>
+              <p className="font-semibold text-white">{companyName}</p>
               <p className="text-sm text-slate-400">San Jose, CA premium siding company.</p>
             </div>
           </div>
@@ -45,12 +65,12 @@ export function Footer() {
           <div>
             <p className="mb-4 text-sm font-semibold uppercase tracking-[0.24em] text-slate-400">Contact</p>
             <div className="space-y-3 text-sm text-slate-300">
-              <p>{siteConfig.address}</p>
-              <Link href={`mailto:${siteConfig.email}`} className="block transition hover:text-white">
-                {siteConfig.email}
+              <p>{address}</p>
+              <Link href={`mailto:${email}`} className="block transition hover:text-white">
+                {email}
               </Link>
-              <Link href={`tel:${siteConfig.phone}`} className="block transition hover:text-white">
-                {siteConfig.phone}
+              <Link href={`tel:${phone}`} className="block transition hover:text-white">
+                {phone}
               </Link>
             </div>
           </div>
@@ -58,7 +78,7 @@ export function Footer() {
       </div>
       <div className="border-t border-slate-800/70 bg-slate-950/95 py-6">
         <div className="mx-auto flex max-w-7xl flex-col gap-4 px-6 text-sm text-slate-500 sm:flex-row sm:items-center sm:justify-between">
-          <p>© {new Date().getFullYear()} {siteConfig.name}. All rights reserved.</p>
+          <p>© {new Date().getFullYear()} {companyName}. All rights reserved.</p>
           <div className="flex flex-wrap items-center gap-3">
             <Badge>Licensed</Badge>
             <Badge>Insured</Badge>

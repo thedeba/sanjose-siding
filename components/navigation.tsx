@@ -1,16 +1,36 @@
 import Link from "next/link";
 import { Phone, Menu } from "lucide-react";
 import { siteConfig } from "../config/site";
+import { prisma } from "../lib/prisma";
 
-export function Navigation() {
+export async function Navigation() {
+  const settings = await prisma.siteSetting.findUnique({
+    where: { id: "site-settings" },
+  });
+
+  const companyName = settings?.companyName || siteConfig.name;
+  const phone = settings?.phone || siteConfig.phone;
+  const logo = settings?.logo;
+
   return (
     <header className="sticky top-0 z-50 border-b border-white/10 bg-slate-950/85 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between px-6 py-4 text-sm text-slate-100">
         <Link href="/" className="flex items-center gap-3 font-semibold tracking-tight text-white">
-          <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-slate-900 text-lg shadow-lg shadow-cyan-500/20">
-            SJ
-          </span>
-          <span>{siteConfig.name}</span>
+          {logo ? (
+            // eslint-disable-next-line @next/next/no-img-element
+            <img 
+              src={logo} 
+              alt={companyName} 
+              className="h-11 w-auto max-w-[150px] object-contain rounded-lg"
+            />
+          ) : (
+            <>
+              <span className="inline-flex h-11 w-11 items-center justify-center rounded-2xl bg-gradient-to-br from-cyan-400 to-slate-900 text-lg shadow-lg shadow-cyan-500/20">
+                SJ
+              </span>
+              <span>{companyName}</span>
+            </>
+          )}
         </Link>
 
         <nav className="hidden items-center gap-8 lg:flex">
@@ -35,9 +55,9 @@ export function Navigation() {
         </nav>
 
         <div className="hidden items-center gap-4 lg:flex">
-          <Link href={`tel:${siteConfig.phone}`} className="inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-bold text-slate-950 shadow-sm transition hover:bg-white">
+          <Link href={`tel:${phone}`} className="inline-flex items-center gap-2 rounded-full bg-white/95 px-5 py-2.5 text-sm font-bold text-slate-950 shadow-sm transition hover:bg-white">
             <Phone className="h-4 w-4 text-cyan-600 animate-pulse" />
-            Call Now: {siteConfig.phone}
+            Call Now: {phone}
           </Link>
         </div>
 

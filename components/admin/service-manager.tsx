@@ -1,18 +1,19 @@
 "use client";
 
 import { useState } from "react";
-import { updateService } from "@/app/admin/actions";
+import { createService, updateService, deleteService } from "@/app/admin/actions";
 import { Button } from "../ui/button";
 import { Input } from "../ui/input";
 import { Label } from "../ui/label";
 import { Card } from "../ui/card";
 import { Textarea } from "../ui/textarea";
-import { Edit2, X, Check } from "lucide-react";
+import { Plus, Trash2, Edit2, X, Check } from "lucide-react";
 
 type Service = {
   id: string;
   title: string;
   slug: string;
+  icon: string;
   shortDescription: string;
   fullContent: string;
   featuredImage: string;
@@ -27,12 +28,13 @@ type ServiceManagerProps = {
 };
 
 export function ServiceManager({ initialServices }: ServiceManagerProps) {
-  const services = initialServices;
+  const [services, setServices] = useState<Service[]>(initialServices);
   const [editingId, setEditingId] = useState<string | null>(null);
 
   // Form States
   const [title, setTitle] = useState("");
   const [slug, setSlug] = useState("");
+  const [icon, setIcon] = useState("");
   const [shortDescription, setShortDescription] = useState("");
   const [fullContent, setFullContent] = useState("");
   const [featuredImage, setFeaturedImage] = useState("");
@@ -44,10 +46,26 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
   const [loading, setLoading] = useState(false);
   const [message, setMessage] = useState<{ text: string; success: boolean } | null>(null);
 
+  const handleOpenNew = () => {
+    setEditingId("new");
+    setTitle("");
+    setSlug("");
+    setIcon("Layers");
+    setShortDescription("");
+    setFullContent("");
+    setFeaturedImage("");
+    setSeoTitle("");
+    setSeoDescription("");
+    setOrder(services.length + 1);
+    setPublished(true);
+    setMessage(null);
+  };
+
   const handleOpenEdit = (service: Service) => {
     setEditingId(service.id);
     setTitle(service.title);
     setSlug(service.slug);
+    setIcon(service.icon);
     setShortDescription(service.shortDescription);
     setFullContent(service.fullContent);
     setFeaturedImage(service.featuredImage);
@@ -70,9 +88,10 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
     setMessage(null);
 
     try {
-      const result = await updateService(editingId, {
+      const data = {
         title,
         slug,
+        icon,
         shortDescription,
         fullContent,
         featuredImage,
@@ -80,10 +99,18 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
         seoDescription,
         published,
         order,
-      });
+      };
 
-      if (result.success) {
-        window.location.reload();
+      if (editingId === "new") {
+        const result = await createService(data);
+        if (result.success) {
+          window.location.reload();
+        }
+      } else {
+        const result = await updateService(editingId, data);
+        if (result.success) {
+          window.location.reload();
+        }
       }
     } catch (err) {
       setMessage({ text: err instanceof Error ? err.message : "An error occurred while saving.", success: false });
@@ -91,12 +118,42 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
     }
   };
 
+  const handleDelete = async (id: string) => {
+    if (!confirm("Are you sure you want to delete this service? All detailed pages under this slug will no longer be active.")) return;
+    setLoading(true);
+    
+    try {
+      const result = await deleteService(id);
+      if (result.success) {
+        setServices(services.filter(s => s.id !== id));
+      }
+    } catch (err) {
+      alert(err instanceof Error ? err.message : "Failed to delete service.");
+    } finally {
+      setLoading(false);
+    }
+  };
+
   return (
     <div className="space-y-6">
+      {/* Action Header */}
+      <div className="flex justify-end">
+        {editingId !== "new" && (
+          <Button 
+            onClick={handleOpenNew} 
+            className="flex items-center gap-2 bg-cyan-500 hover:bg-cyan-600 text-slate-950 font-semibold rounded-2xl transition-all duration-300"
+          >
+            <Plus className="h-4 w-4" /> Add Service
+          </Button>
+        )}
+      </div>
+
       {/* Editor Panel */}
       {editingId && (
         <form onSubmit={handleSave} className="space-y-4 rounded-[2rem] border border-white/10 bg-slate-900/60 p-8 shadow-2xl backdrop-blur-xl">
-          <h2 className="text-xl font-semibold text-white">Edit Service</h2>
+          <h2 className="text-xl font-semibold text-white">
+            {editingId === "new" ? "Create New Service" : "Edit Service"}
+          </h2>
           
           <div className="grid gap-6 md:grid-cols-2">
             <div className="space-y-2">
@@ -104,7 +161,12 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
               <Input 
                 id="title" 
                 value={title} 
-                onChange={(e) => setTitle(e.target.value)} 
+                onChange={(e) => {
+                  setTitle(e.target.value);
+                  if (editingId === "new") {
+                    setSlug(e.target.value.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, ""));
+                  }
+                }} 
                 required 
                 className="border-white/10 bg-slate-950/80 text-white"
               />
@@ -116,6 +178,30 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
                 id="slug" 
                 value={slug} 
                 onChange={(e) => setSlug(e.target.value)} 
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="icon">Lucide Icon Name</Label>
+              <Input 
+                id="icon" 
+                value={icon} 
+                onChange={(e) => setIcon(e.target.value)} 
+                placeholder="e.g. Layers, Tool, Sparkles, AlertCircle"
+                required 
+                className="border-white/10 bg-slate-950/80 text-white"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="order">Sort Order</Label>
+              <Input 
+                id="order" 
+                type="number"
+                value={order} 
+                onChange={(e) => setOrder(parseInt(e.target.value) || 0)} 
                 required 
                 className="border-white/10 bg-slate-950/80 text-white"
               />
@@ -177,19 +263,7 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
               />
             </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="order">Sort Order</Label>
-              <Input 
-                id="order" 
-                type="number"
-                value={order} 
-                onChange={(e) => setOrder(parseInt(e.target.value) || 0)} 
-                required 
-                className="border-white/10 bg-slate-950/80 text-white"
-              />
-            </div>
-
-            <div className="flex items-center gap-2 pt-8">
+            <div className="flex items-center gap-2 pt-8 md:col-span-2">
               <input 
                 id="published" 
                 type="checkbox"
@@ -240,6 +314,8 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
                 <div className="flex gap-4 pt-1 text-xs text-slate-500">
                   <span>Order: {service.order}</span>
                   <span>•</span>
+                  <span>Icon: {service.icon}</span>
+                  <span>•</span>
                   <span>SEO Title: {service.seoTitle}</span>
                 </div>
               </div>
@@ -254,6 +330,12 @@ export function ServiceManager({ initialServices }: ServiceManagerProps) {
                   className="!p-2.5 bg-white/5 hover:bg-white/15 border border-white/5 hover:border-white/10 text-white"
                 >
                   <Edit2 className="h-4 w-4" />
+                </Button>
+                <Button 
+                  onClick={() => handleDelete(service.id)}
+                  className="!p-2.5 bg-rose-500/10 hover:bg-rose-500/25 border border-rose-500/10 hover:border-rose-500/20 text-rose-400"
+                >
+                  <Trash2 className="h-4 w-4" />
                 </Button>
               </div>
             </div>

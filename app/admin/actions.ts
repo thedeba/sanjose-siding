@@ -100,6 +100,7 @@ export async function updateService(
   data: {
     title: string;
     slug: string;
+    icon: string;
     shortDescription: string;
     fullContent: string;
     featuredImage: string;
@@ -119,6 +120,43 @@ export async function updateService(
   revalidatePath("/admin/services");
   revalidatePath("/services");
   revalidatePath(`/services/${data.slug}`);
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function createService(data: {
+  title: string;
+  slug: string;
+  icon: string;
+  shortDescription: string;
+  fullContent: string;
+  featuredImage: string;
+  seoTitle: string;
+  seoDescription: string;
+  published: boolean;
+  order: number;
+}) {
+  await requireAuth();
+
+  await prisma.service.create({
+    data,
+  });
+
+  revalidatePath("/admin/services");
+  revalidatePath("/services");
+  revalidatePath("/");
+  return { success: true };
+}
+
+export async function deleteService(id: string) {
+  await requireAuth();
+
+  await prisma.service.delete({
+    where: { id },
+  });
+
+  revalidatePath("/admin/services");
+  revalidatePath("/services");
   revalidatePath("/");
   return { success: true };
 }
